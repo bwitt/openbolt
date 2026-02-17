@@ -98,6 +98,9 @@
         "transport": {
           "$ref": "#/definitions/transport"
         },
+        "choria": {
+          "$ref": "#/definitions/choria"
+        },
         "docker": {
           "$ref": "#/definitions/docker"
         },
@@ -471,6 +474,7 @@
         {
           "type": "string",
           "enum": [
+            "choria",
             "docker",
             "jail",
             "local",
@@ -480,6 +484,89 @@
             "ssh",
             "winrm"
           ]
+        },
+        {
+          "$ref": "#/definitions/_plugin"
+        }
+      ]
+    },
+    "choria": {
+      "description": "A map of configuration options for the choria transport. The choria transport communicates with targets via the Choria orchestration framework using its messaging network and RPC agents.",
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "choria-config": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/choria-config"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "cleanup": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/cleanup"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "collective": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/collective"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "connect-timeout": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/connect-timeout"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "interpreters": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/interpreters"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "tmpdir": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/tmpdir"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            },
+            "tty": {
+              "oneOf": [
+                {
+                  "$ref": "#/transport_definitions/tty"
+                },
+                {
+                  "$ref": "#/definitions/_plugin"
+                }
+              ]
+            }
+          }
         },
         {
           "$ref": "#/definitions/_plugin"
@@ -1597,11 +1684,33 @@
         }
       ]
     },
+    "choria-config": {
+      "description": "The path to a MCollective/Choria client configuration file. This file specifies NATS broker connection details, security settings, and other parameters needed to communicate with the Choria network. If not specified, the default MCollective client config path is used.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/_plugin"
+        }
+      ]
+    },
     "cleanup": {
       "description": "Whether to clean up temporary files created on targets. When running commands on a target, Bolt might create temporary files. After completing the command, these files are automatically deleted. This value can be set to 'false' if you wish to leave these temporary files on the target.",
       "oneOf": [
         {
           "type": "boolean"
+        },
+        {
+          "$ref": "#/definitions/_plugin"
+        }
+      ]
+    },
+    "collective": {
+      "description": "The Choria collective to target when using the choria transport. Defaults to the collective configured in the Choria client configuration.",
+      "oneOf": [
+        {
+          "type": "string"
         },
         {
           "$ref": "#/definitions/_plugin"

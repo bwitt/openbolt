@@ -239,6 +239,67 @@ once as the actions are running, and again after Bolt prints the results. You ca
 Bolt from printing the results once the action has completed by specifying the `--no-verbose`
 command-line option.
 
+## Choria transport
+
+The Choria transport supports running commands, scripts, tasks, and file
+transfers on targets managed by a [Choria](https://choria.io/) broker network.
+Instead of connecting directly to each target over SSH or WinRM, Bolt
+communicates through the Choria orchestration framework using the
+`choria-mcorpc-support` Ruby gem to connect directly to the NATS broker. This
+lets you manage nodes that are reachable through a Choria broker but may not be
+directly accessible over SSH.
+
+The Choria transport uses the Choria **shell** agent to execute commands on
+remote nodes and the **rpcutil** agent for connectivity checks. Files are
+transferred by base64-encoding content and sending it through the shell agent.
+
+You can see the full list of supported configuration options [on the transport
+reference page](bolt_transports_reference.md).
+
+> **Note:** Targets must be running the Choria server with the shell agent
+> enabled. A MCollective/Choria client configuration file may be needed to
+> specify NATS broker connection details and security settings.
+
+The example inventory file below demonstrates connecting to Choria-managed
+targets.
+
+```yaml
+targets:
+  - uri: choria://webserver1.example.net
+  - uri: choria://dbserver1.example.net
+    config:
+      choria:
+        collective: production
+        choria-config: /etc/choria/client.conf
+        connect-timeout: 30
+```
+
+You can also set the transport at the group level:
+
+```yaml
+groups:
+  - name: choria_nodes
+    config:
+      transport: choria
+      choria:
+        choria-config: /etc/choria/client.conf
+    targets:
+      - webserver1.example.net
+      - dbserver1.example.net
+```
+
+### Choria transport configuration options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `choria-config` | String | — | Path to a MCollective/Choria client configuration file for NATS broker connection details |
+| `cleanup` | Boolean | `true` | Whether to remove temporary directories after execution |
+| `collective` | String | — | Choria collective to target |
+| `connect-timeout` | Integer | `10` | Timeout in seconds for Choria RPC requests |
+| `interpreters` | Hash | — | Map of file extensions to interpreter paths |
+| `tmpdir` | String | — | Base directory for temporary files on the target |
+| `tty` | Boolean | — | Whether to allocate a pseudo-TTY |
+
 ## LXD Transport
 
 This feature was introduced in [Bolt 3.2.0](https://github.com/puppetlabs/bolt/blob/main/CHANGELOG.md#bolt-320-2021-3-08).

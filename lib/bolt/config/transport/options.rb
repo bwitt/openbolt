@@ -41,6 +41,16 @@ module Bolt
             _plugin: true,
             _example: "~/.puppetlabs/puppet/cert.pem"
           },
+          "choria-config" => {
+            type: String,
+            description: "The path to a MCollective/Choria client configuration file. " \
+                         "This file specifies NATS broker connection details, security " \
+                         "settings, and other parameters needed to communicate with the " \
+                         "Choria network. If not specified, the default MCollective " \
+                         "client config path is used.",
+            _plugin: true,
+            _example: "/etc/choria/client.conf"
+          },
           "cleanup" => {
             type: [TrueClass, FalseClass],
             description: "Whether to clean up temporary files created on targets. When running commands on a target, " \
@@ -50,6 +60,13 @@ module Bolt
             _plugin: true,
             _default: true,
             _example: false
+          },
+          "collective" => {
+            type: String,
+            description: "The Choria collective to target when using the choria transport. " \
+                         "Defaults to the collective configured in the Choria client configuration.",
+            _plugin: true,
+            _example: "mcollective"
           },
           "connect-timeout" => {
             type: Integer,

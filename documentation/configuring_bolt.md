@@ -71,6 +71,7 @@ Inventory configuration can be set at multiple levels in an inventory file
 under a `config` option. You can set the following options under `config`:
 
 - `transport`
+- `choria`
 - `docker`
 - `local`
 - `pcp`
